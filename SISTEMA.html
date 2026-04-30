@@ -1,0 +1,231 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html lang="pt" xml:lang="pt" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
+<meta name="viewport" content="width=device-width">
+<meta name="generator" content="SISTEMA v1">
+<title>SISTEMA</title>
+<style type="text/css">
+*{box-sizing:border-box}
+body{background:#1a1a1a;color:#ccc;font-family:monospace;margin:0;padding:12px}
+h2{color:#0f0;margin:0 0 8px}
+#O0{width:100%;height:220px;background:#000;color:#0f0;padding:8px;overflow-y:scroll;white-space:pre;font-size:12px;border:1px solid #333}
+#tO{width:100%;height:260px;background:#000;color:#aaa;padding:8px;overflow-y:scroll;white-space:pre;font-size:12px;border:1px solid #333;margin-top:4px}
+.ll{display:none}
+.wr{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.bx{background:#111;border:1px solid #444;padding:10px;flex:1;min-width:220px}
+.bx label{display:block;font-size:11px;color:#888;margin-bottom:2px}
+.bx input,.bx select{width:100%;background:#000;color:#0f0;border:1px solid #555;padding:4px;font-family:monospace;font-size:13px}
+.bx select option{background:#000}
+button{background:#003300;color:#0f0;border:1px solid #0f0;padding:6px 14px;font-family:monospace;cursor:pointer;font-size:13px}
+button:hover{background:#004400}
+#rr{background:#111;border:1px solid #444;padding:10px;margin-bottom:10px}
+#rr table{width:100%;border-collapse:collapse;font-size:13px}
+#rr td,#rr th{padding:4px 8px;border:1px solid #333;text-align:left}
+#rr th{color:#888;font-weight:normal}
+.ok{color:#0f0}.fail{color:#f44}.neu{color:#888}
+#sb{display:flex;gap:8px;align-items:center;margin-bottom:6px}
+#sc{font-size:12px;color:#888}
+</style>
+<script>var _=[];var __=0;var ___=0</script>
+</head>
+<body onload="(function(){IlII();II();lI1()})()">
+
+<div class="wr">
+  <div class="bx">
+    <label>NOME</label>
+    <input type="text" id="iNm" value="JOAO" oninput="void(0)" onchange="void(0)">
+  </div>
+  <div class="bx">
+    <label>TIPO</label>
+    <select id="iTp" onchange="document.getElementById('iNm').style.borderColor='#555'">
+      <option value="VIP">VIP</option>
+      <option value="COMUM">COMUM</option>
+      <option value="FUNCIONARIO">FUNCIONARIO</option>
+      <option value="ESTRANHO">OUTRO</option>
+    </select>
+  </div>
+  <div class="bx">
+    <label>VALOR (R$)</label>
+    <input type="number" id="iVl" value="1000" min="0" step="0.01">
+  </div>
+  <div class="bx">
+    <label>STATUS</label>
+    <select id="iSt">
+      <option value="1">ATIVO</option>
+      <option value="0">INATIVO</option>
+    </select>
+  </div>
+</div>
+
+<div id="sb">
+  <button onclick="l0lII()">&#x25BA; CALCULAR</button>
+  <button onclick="lIlIl()">&#x25BA; RODAR TESTES</button>
+  <button onclick="(function(){document.getElementById('O0').innerHTML='';document.getElementById('rr').innerHTML='';document.getElementById('sc').innerText=''})()">&#x2715; LIMPAR</button>
+  <span id="sc"></span>
+</div>
+
+<div id="rr"></div>
+<div id="O0"></div>
+
+<h2 style="margin-top:10px">&#x25A0; LOG TESTES</h2>
+<div id="tO"></div>
+
+<span class="ll" id="__0__"></span>
+
+<script type="text/javascript">
+var lI=[['\x56\x49\x50'],['\x43\x4f\x4d\x55\x4d'],['\x46\x55\x4e\x43\x49\x4f\x4e\x41\x52\x49\x4f']]
+var llI1=[[30,25,20,15,10,5],[15,12,10,7,5,0],[50,45,40,35,30,25]]
+var lIII=[10000,5000,1000,500,100,0]
+var lll=0,llI=0
+</script>
+
+<script type="text/javascript">
+function $_(x){var e=document.getElementById('O0');e.innerHTML+=x+'\n';e.scrollTop=e.scrollHeight}
+function $_t(x){var e=document.getElementById('tO');e.innerHTML+=x+'\n';e.scrollTop=e.scrollHeight}
+function $r(h){document.getElementById('rr').innerHTML=h}
+function $c(x){document.getElementById('sc').innerText=x}
+</script>
+
+<script type="text/javascript">
+function lIIlI(lOO,lO0){
+var l00=-1,_$=0,$$_=0,_$$=0,l0O=false
+for(var lO00=0;lO00<lI.length;lO00++){if(lOO==lI[lO00][0]){l00=lO00;break}}
+if(l00>=0){
+var lO0l=llI1[l00]
+for(var lO0O=0;lO0O<lIII.length;lO0O++){if(lO0>=lIII[lO0O]){_$=lO0l[lO0O];l0O=true;break}}
+if(!l0O){_$=lO0l[lO0l.length-1]}}
+$$_=lO0*_$/100;_$$=lO0-$$_
+return{d:_$,dv:$$_,t:_$$}}
+</script>
+
+<script>
+function l0lII(){
+var lOl=document.getElementById('iNm').value||'?'
+var lOO=document.getElementById('iTp').value
+var lO0=parseFloat(document.getElementById('iVl').value)||0
+var O0lI=parseInt(document.getElementById('iSt').value)
+$_('> CALCULAR: '+lOl+' | '+lOO+' | R$'+lO0.toFixed(2)+' | '+(O0lI?'ATIVO':'INATIVO'))
+if(O0lI!=1){
+$r('<table><tr><th>CAMPO</th><th>VALOR</th></tr><tr><td>CLIENTE</td><td>'+lOl+'</td></tr><tr><td>STATUS</td><td class="fail">INATIVO</td></tr><tr><td>DESCONTO</td><td>0.00%</td></tr><tr><td>TOTAL</td><td>R$ '+lO0.toFixed(2)+'</td></tr></table>')
+$_('\x43\x4c\x49\x45\x4e\x54\x45\x20\x49\x4e\x41\x54\x49\x56\x4f');$_('---');return}
+if(lO0<=0){
+$r('<table><tr><th>ERRO</th></tr><tr><td class="fail">'+(lO0==0?'\x56\x41\x4c\x4f\x52\x20\x5a\x45\x52\x4f':'\x56\x41\x4c\x4f\x52\x20\x4e\x45\x47\x41\x54\x49\x56\x4f')+'</td></tr></table>')
+$_('---');return}
+var r=lIIlI(lOO,lO0)
+var lIc=r.d>0?'ok':'neu'
+$r('<table>'+
+'<tr><th>CAMPO</th><th>VALOR</th></tr>'+
+'<tr><td>CLIENTE</td><td>'+lOl+'</td></tr>'+
+'<tr><td>TIPO</td><td>'+lOO+'</td></tr>'+
+'<tr><td>VALOR ORIGINAL</td><td>R$ '+lO0.toFixed(2)+'</td></tr>'+
+'<tr><td>DESCONTO (%)</td><td class="'+lIc+'">'+r.d.toFixed(2)+'%</td></tr>'+
+'<tr><td>DESCONTO (R$)</td><td class="'+lIc+'">R$ '+r.dv.toFixed(2)+'</td></tr>'+
+'<tr><td><b>TOTAL A PAGAR</b></td><td><b>R$ '+r.t.toFixed(2)+'</b></td></tr>'+
+'</table>')
+$_('\x43\x4c\x49\x45\x4e\x54\x45\x3a\x20'+lOl)
+$_('\x54\x49\x50\x4f\x3a\x20'+lOO)
+$_('\x56\x41\x4c\x4f\x52\x20\x4f\x52\x49\x47\x49\x4e\x41\x4c\x3a\x20'+lO0.toFixed(2))
+$_('\x44\x45\x53\x43\x4f\x4e\x54\x4f\x20\x28\x25\x29\x3a\x20'+r.d.toFixed(2))
+$_('\x44\x45\x53\x43\x4f\x4e\x54\x4f\x20\x28\x52\x24\x29\x3a\x20'+r.dv.toFixed(2))
+$_('\x54\x4f\x54\x41\x4c\x20\x41\x20\x50\x41\x47\x41\x52\x3a\x20'+r.t.toFixed(2))
+$_('---')}
+</script>
+
+<script type="text/javascript">
+function IlII(){
+$_('=======================================')
+$_('\x53\x49\x53\x54\x45\x4d\x41\x20\x44\x45\x20\x50\x45\x44\x49\x44\x4f\x53\x20\x43\x4f\x4d\x20\x44\x45\x53\x43\x4f\x4e\x54\x4f')
+$_('=======================================')
+$_('')
+$_('--- DEMONSTRACAO ---')
+;(function(lOl,lOO,lO0,O0lI){if(O0lI!=1){$_('\x43\x4c\x49\x45\x4e\x54\x45\x20\x49\x4e\x41\x54\x49\x56\x4f\x3a\x20'+lOl);$_('---');return}
+var r=lIIlI(lOO,lO0);$_('\x43\x4c\x49\x45\x4e\x54\x45\x3a\x20'+lOl);$_('\x54\x49\x50\x4f\x3a\x20'+lOO);$_('\x56\x41\x4c\x4f\x52\x3a\x20'+lO0.toFixed(2));$_('\x44\x45\x53\x43\x4f\x4e\x54\x4f\x3a\x20'+r.d.toFixed(2)+'%');$_('\x54\x4f\x54\x41\x4c\x3a\x20'+r.t.toFixed(2));$_('---')})
+('\x4a\x4f\x41\x4f',lI[0][0],1000,1);(function(lOl,lOO,lO0,O0lI){if(O0lI!=1){$_('\x43\x4c\x49\x45\x4e\x54\x45\x20\x49\x4e\x41\x54\x49\x56\x4f\x3a\x20'+lOl);$_('---');return}
+var r=lIIlI(lOO,lO0);$_('\x43\x4c\x49\x45\x4e\x54\x45\x3a\x20'+lOl);$_('\x54\x49\x50\x4f\x3a\x20'+lOO);$_('\x56\x41\x4c\x4f\x52\x3a\x20'+lO0.toFixed(2));$_('\x44\x45\x53\x43\x4f\x4e\x54\x4f\x3a\x20'+r.d.toFixed(2)+'%');$_('\x54\x4f\x54\x41\x4c\x3a\x20'+r.t.toFixed(2));$_('---')})
+('\x4d\x41\x52\x49\x41',lI[1][0],500,1);(function(lOl,lOO,lO0,O0lI){if(O0lI!=1){$_('\x43\x4c\x49\x45\x4e\x54\x45\x20\x49\x4e\x41\x54\x49\x56\x4f\x3a\x20'+lOl);$_('---');return}
+var r=lIIlI(lOO,lO0);$_('\x43\x4c\x49\x45\x4e\x54\x45\x3a\x20'+lOl);$_('\x54\x49\x50\x4f\x3a\x20'+lOO);$_('\x56\x41\x4c\x4f\x52\x3a\x20'+lO0.toFixed(2));$_('\x44\x45\x53\x43\x4f\x4e\x54\x4f\x3a\x20'+r.d.toFixed(2)+'%');$_('\x54\x4f\x54\x41\x4c\x3a\x20'+r.t.toFixed(2));$_('---')})
+('\x50\x45\x44\x52\x4f',lI[2][0],200,0)}
+</script>
+
+<script>
+function lIlll(lll0,lllI0,IlllI,lllll,IlIlI,lIIII,IlIl){
+var _0=0,_1=0,_2=0,_3=false
+if(!lllll){_0=0;_1=IlllI
+var _p=(_0==IlIlI&&_1==lIIII)
+if(_p){lll++;$_t('\x5b\x4f\x4b\x5d\x20\x20\x20'+IlIl+' | DESC='+_0.toFixed(2)+'% TOTAL='+_1.toFixed(2))}
+else{llI++;$_t('\x5b\x46\x41\x49\x4c\x5d '+IlIl+' | ESP: DESC='+IlIlI.toFixed(2)+'% TOTAL='+lIIII.toFixed(2)+' | OBT: DESC='+_0.toFixed(2)+'% TOTAL='+_1.toFixed(2))}
+return{ok:_p,d:_0,t:_1,msg:IlIl}}
+if(!(IlllI>0)){_0=0;_1=0
+var _p=(_0==IlIlI&&_1==lIIII)
+if(_p){lll++;$_t('\x5b\x4f\x4b\x5d\x20\x20\x20'+IlIl)}else{llI++;$_t('\x5b\x46\x41\x49\x4c\x5d '+IlIl)}
+return{ok:_p,d:_0,t:_1,msg:IlIl}}
+var r=lIIlI(lllI0,IlllI)
+_0=r.d;_2=r.dv;_1=r.t
+var _p=(_0==IlIlI&&Math.abs(_1-lIIII)<0.001)
+if(_p){lll++;$_t('\x5b\x4f\x4b\x5d\x20\x20\x20'+IlIl+' | DESC='+_0.toFixed(2)+'% TOTAL='+_1.toFixed(2))}
+else{llI++;$_t('\x5b\x46\x41\x49\x4c\x5d '+IlIl+' | ESP: DESC='+IlIlI.toFixed(2)+'% TOTAL='+lIIII.toFixed(2)+' | OBT: DESC='+_0.toFixed(2)+'% TOTAL='+_1.toFixed(2))}
+return{ok:_p,d:_0,t:_1,msg:IlIl}}
+</script>
+
+<script type="text/javascript">
+var lIlIlI=[
+['\x43\x41\x52\x4c\x4f\x53',lI[0][0],1000,1,20,800,'\x54\x45\x53\x54\x45\x20\x56\x49\x50\x20\x31\x30\x30\x30'],
+['\x43\x41\x52\x4c\x4f\x53',lI[0][0],500,1,15,425,'\x54\x45\x53\x54\x45\x20\x56\x49\x50\x20\x35\x30\x30'],
+['\x43\x41\x52\x4c\x4f\x53',lI[0][0],50,1,5,47.5,'\x54\x45\x53\x54\x45\x20\x56\x49\x50\x20\x35\x30'],
+['\x43\x41\x52\x4c\x4f\x53',lI[0][0],5000,1,25,3750,'\x54\x45\x53\x54\x45\x20\x56\x49\x50\x20\x35\x30\x30\x30'],
+['\x43\x41\x52\x4c\x4f\x53',lI[0][0],10000,1,30,7000,'\x54\x45\x53\x54\x45\x20\x56\x49\x50\x20\x31\x30\x30\x30\x30'],
+['\x41\x4e\x41',lI[1][0],1000,1,10,900,'\x54\x45\x53\x54\x45\x20\x43\x4f\x4d\x55\x4d\x20\x31\x30\x30\x30'],
+['\x41\x4e\x41',lI[1][0],500,1,7,465,'\x54\x45\x53\x54\x45\x20\x43\x4f\x4d\x55\x4d\x20\x35\x30\x30'],
+['\x41\x4e\x41',lI[1][0],50,1,0,50,'\x54\x45\x53\x54\x45\x20\x43\x4f\x4d\x55\x4d\x20\x35\x30'],
+['\x42\x4f\x42',lI[2][0],1000,1,40,600,'\x54\x45\x53\x54\x45\x20\x46\x55\x4e\x43\x20\x31\x30\x30\x30'],
+['\x42\x4f\x42',lI[2][0],50,1,25,37.5,'\x54\x45\x53\x54\x45\x20\x46\x55\x4e\x43\x20\x35\x30'],
+['\x5a\x45\x43\x41',lI[0][0],9999,0,0,9999,'\x54\x45\x53\x54\x45\x20\x49\x4e\x41\x54\x49\x56\x4f'],
+['\x58','\x45\x53\x54\x52\x41\x4e\x48\x4f',500,1,0,500,'\x54\x45\x53\x54\x45\x20\x54\x49\x50\x4f\x20\x49\x4e\x56'],
+['\x43\x41\x52\x4c\x4f\x53',lI[0][0],100,1,10,90,'\x54\x45\x53\x54\x45\x20\x56\x49\x50\x20\x31\x30\x30'],
+['\x42\x4f\x42',lI[2][0],10000,1,50,5000,'\x54\x45\x53\x54\x45\x20\x46\x55\x4e\x43\x20\x31\x30\x30\x30\x30'],
+['\x41\x4e\x41',lI[1][0],10000,1,15,8500,'\x54\x45\x53\x54\x45\x20\x43\x4f\x4d\x55\x4d\x20\x31\x30\x4b']
+]
+</script>
+
+<script>
+function II(){
+lll=0;llI=0
+document.getElementById('tO').innerHTML=''
+$_t('=======================================')
+$_t('\x52\x4f\x44\x41\x4e\x44\x4f\x20\x54\x45\x53\x54\x45\x53\x2e\x2e\x2e')
+$_t('=======================================')
+var lRs=[],lOk=0,lFl=0
+for(var lIi=0;lIi<lIlIlI.length;lIi++){
+var lTt=lIlIlI[lIi]
+var lRr=lIlll(lTt[0],lTt[1],lTt[2],lTt[3],lTt[4],lTt[5],lTt[6])
+lRs.push(lRr);if(lRr.ok){lOk++}else{lFl++}}
+$_t('=======================================')
+$_t('OK: '+lll+' | FAIL: '+llI)
+$_t('=======================================')
+var lTb='<table><tr><th>#</th><th>TESTE</th><th>DESC%</th><th>TOTAL</th><th>STATUS</th></tr>'
+for(var lIi=0;lIi<lRs.length;lIi++){
+var lRr=lRs[lIi]
+lTb+='<tr><td class="neu">'+(lIi+1)+'</td><td>'+lRr.msg+'</td><td>'+lRr.d.toFixed(2)+'%</td><td>R$ '+lRr.t.toFixed(2)+'</td><td class="'+(lRr.ok?'ok':'fail')+'">'+(lRr.ok?'&#x2713; OK':'&#x2717; FAIL')+'</td></tr>'}
+lTb+='</table>'
+$r(lTb)
+$c('TESTES: '+lll+' OK | '+llI+' FAIL')}
+</script>
+
+<script>
+function lIlIl(){II()}
+function lI1(){
+$_('=======================================')
+$_('\x52\x45\x53\x55\x4c\x54\x41\x44\x4f\x20\x46\x49\x4e\x41\x4c')
+$_('=======================================')
+$_('TESTES OK:   '+lll)
+$_('\x54\x45\x53\x54\x45\x53\x20\x46\x41\x49\x4c\x3a\x20'+llI)
+$_('TOTAL:       '+(lll+llI))
+if(llI==0){$_('\x54\x4f\x44\x4f\x53\x20\x4f\x53\x20\x54\x45\x53\x54\x45\x53\x20\x50\x41\x53\x53\x41\x52\x41\x4d\x21')}
+else{$_('\x45\x58\x49\x53\x54\x45\x4d\x20\x46\x41\x4c\x48\x41\x53\x21')}
+$_('=======================================')}
+</script>
+
+</body>
+</html>
