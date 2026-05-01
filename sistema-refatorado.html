@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Pedidos com Desconto</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { background: #1a1a1a; color: #ccc; font-family: monospace; margin: 0; padding: 12px; }
+    h2 { color: #0f0; margin: 0 0 8px; }
+    .form-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+    .field { background: #111; border: 1px solid #444; padding: 10px; flex: 1; min-width: 220px; }
+    .field label { display: block; font-size: 11px; color: #888; margin-bottom: 2px; }
+    .field input, .field select { width: 100%; background: #000; color: #0f0; border: 1px solid #555; padding: 4px; font-family: monospace; font-size: 13px; }
+    .actions { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
+    button { background: #003300; color: #0f0; border: 1px solid #0f0; padding: 6px 14px; font-family: monospace; cursor: pointer; font-size: 13px; }
+    button:hover { background: #004400; }
+    #result-table { background: #111; border: 1px solid #444; padding: 10px; margin-bottom: 10px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    td, th { padding: 4px 8px; border: 1px solid #333; text-align: left; }
+    th { color: #888; font-weight: normal; }
+    .ok   { color: #0f0; }
+    .fail { color: #f44; }
+    .neu  { color: #888; }
+    #log  { width: 100%; height: 220px; background: #000; color: #0f0; padding: 8px; overflow-y: scroll; white-space: pre; font-size: 12px; border: 1px solid #333; }
+    #test-log { width: 100%; height: 200px; background: #000; color: #aaa; padding: 8px; overflow-y: scroll; white-space: pre; font-size: 12px; border: 1px solid #333; margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+<h2>&#x25A0; SISTEMA DE PEDIDOS COM DESCONTO</h2>
+
+<div class="form-row">
+  <div class="field">
+    <label for="input-name">NOME</label>
+    <input type="text" id="input-name" value="JOAO">
+  </div>
+  <div class="field">
+    <label for="input-type">TIPO</label>
+    <select id="input-type">
+      <option value="VIP">VIP</option>
+      <option value="COMUM">COMUM</option>
+      <option value="FUNCIONARIO">FUNCIONARIO</option>
+      <option value="ESTRANHO">OUTRO</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="input-value">VALOR (R$)</label>
+    <input type="number" id="input-value" value="1000" min="0" step="0.01">
+  </div>
+  <div class="field">
+    <label for="input-status">STATUS</label>
+    <select id="input-status">
+      <option value="1">ATIVO</option>
+      <option value="0">INATIVO</option>
+    </select>
+  </div>
+</div>
+
+<div class="actions">
+  <button onclick="handleCalculate()">&#x25BA; CALCULAR</button>
+  <button onclick="handleRunTests()">&#x25BA; RODAR TESTES</button>
+  <button onclick="handleClear()">&#x2715; LIMPAR</button>
+</div>
+
+<div id="result-table"></div>
+<div id="log"></div>
+
+<h2 style="margin-top:10px">&#x25A0; LOG TESTES</h2>
+<div id="test-log"></div>
+
+<script>
+  // ─── Constantes de domínio ───────────────────────────────────────────────────
+
+  const CUSTOMER_TYPES = ['VIP', 'COMUM', 'FUNCIONARIO'];
+
+  // Faixas de valor mínimo para cada nível de desconto
+  const VALUE_TIERS = [10000, 5000, 1000, 500, 100, 0];
+
+  // Percentuais de desconto por tipo e faixa (índices alinhados com VALUE_TIERS)
+  const DISCOUNT_TABLE = {
+    VIP:         [30, 25, 20, 15, 10,  5],
+    COMUM:       [15, 12, 10,  7,  5,  0],
+    FUNCIONARIO: [50, 45, 40, 35, 30, 25],
+  };
+
+  // ─── Lógica de negócio ───────────────────────────────────────────────────────
+
+  /**
+   * Retorna o percentual de desconto para um tipo e valor dados.
+   * Retorna 0 se o tipo não for reconhecido.
+   */
+  function getDiscountPercent(customerType, value) {
+    const tiers = DISCOUNT_TABLE[customerType];
+    if (!tiers) return 0;
+
+    const tierIndex = VALUE_TIERS.findIndex(tier => value >= tier);
+    return tierIndex >= 0 ? tiers[tierIndex] : tiers[tiers.length - 1];
+  }
+
+  /**
+   * Calcula o resultado de um pedido.
+   * Retorna { discountPercent, discountValue, total }
+   */
+  function calculateOrder(customerType, value) {
+    const discountPercent = getDiscountPercent(customerType, value);
+    const discountValue   = value * discountPercent / 100;
+    const total           = value - discountValue;
+    return { discountPercent, discountValue, total };
+  }
+
+  // ─── Renderização ────────────────────────────────────────────────────────────
+
+  function log(message) {
+    const el = document.getElementById('log');
+    el.textContent += message + '\n';
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function logTest(message) {
+    const el = document.getElementById('test-log');
+    el.textContent += message + '\n';
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function renderResultTable(html) {
+    document.getElementById('result-table').innerHTML = html;
+  }
+
+  function buildOrderTable(name, type, originalValue, result) {
+    const discountClass = result.discountPercent > 0 ? 'ok' : 'neu';
+    return `
+      <table>
+        <tr><th>CAMPO</th><th>VALOR</th></tr>
+        <tr><td>CLIENTE</td><td>${name}</td></tr>
+        <tr><td>TIPO</td><td>${type}</td></tr>
+        <tr><td>VALOR ORIGINAL</td><td>R$ ${originalValue.toFixed(2)}</td></tr>
+        <tr><td>DESCONTO (%)</td><td class="${discountClass}">${result.discountPercent.toFixed(2)}%</td></tr>
+        <tr><td>DESCONTO (R$)</td><td class="${discountClass}">R$ ${result.discountValue.toFixed(2)}</td></tr>
+        <tr><td><b>TOTAL A PAGAR</b></td><td><b>R$ ${result.total.toFixed(2)}</b></td></tr>
+      </table>`;
+  }
+
+  function buildTestSummaryTable(results) {
+    const rows = results.map((r, i) => `
+      <tr>
+        <td class="neu">${i + 1}</td>
+        <td>${r.label}</td>
+        <td>${r.discountPercent.toFixed(2)}%</td>
+        <td>R$ ${r.total.toFixed(2)}</td>
+        <td class="${r.passed ? 'ok' : 'fail'}">${r.passed ? '&#x2713; OK' : '&#x2717; FAIL'}</td>
+      </tr>`).join('');
+
+    return `
+      <table>
+        <tr><th>#</th><th>TESTE</th><th>DESC%</th><th>TOTAL</th><th>STATUS</th></tr>
+        ${rows}
+      </table>`;
+  }
+
+  // ─── Handlers de UI ──────────────────────────────────────────────────────────
+
+  function handleCalculate() {
+    const name   = document.getElementById('input-name').value || '?';
+    const type   = document.getElementById('input-type').value;
+    const value  = parseFloat(document.getElementById('input-value').value) || 0;
+    const active = document.getElementById('input-status').value === '1';
+
+    log(`> CALCULAR: ${name} | ${type} | R$ ${value.toFixed(2)} | ${active ? 'ATIVO' : 'INATIVO'}`);
+
+    if (!active) {
+      renderResultTable(`
+        <table>
+          <tr><th>CAMPO</th><th>VALOR</th></tr>
+          <tr><td>CLIENTE</td><td>${name}</td></tr>
+          <tr><td>STATUS</td><td class="fail">INATIVO</td></tr>
+          <tr><td>DESCONTO</td><td>0.00%</td></tr>
+          <tr><td>TOTAL</td><td>R$ ${value.toFixed(2)}</td></tr>
+        </table>`);
+      log('CLIENTE INATIVO\n---');
+      return;
+    }
+
+    if (value <= 0) {
+      renderResultTable(`<table><tr><th>ERRO</th></tr><tr><td class="fail">${value === 0 ? 'VALOR ZERO' : 'VALOR NEGATIVO'}</td></tr></table>`);
+      log('---');
+      return;
+    }
+
+    const result = calculateOrder(type, value);
+    renderResultTable(buildOrderTable(name, type, value, result));
+    log(`CLIENTE: ${name}\nTIPO: ${type}\nVALOR ORIGINAL: ${value.toFixed(2)}\nDESCONTO (%): ${result.discountPercent.toFixed(2)}\nDESCONTO (R$): ${result.discountValue.toFixed(2)}\nTOTAL A PAGAR: ${result.total.toFixed(2)}\n---`);
+  }
+
+  function handleClear() {
+    document.getElementById('log').textContent = '';
+    document.getElementById('test-log').textContent = '';
+    document.getElementById('result-table').innerHTML = '';
+  }
+
+  // ─── Testes ──────────────────────────────────────────────────────────────────
+
+  const TEST_CASES = [
+    { name: 'CARLOS', type: 'VIP',         value: 1000,  active: true,  expectedDiscount: 20, expectedTotal: 800,    label: 'TESTE VIP 1000'      },
+    { name: 'CARLOS', type: 'VIP',         value: 500,   active: true,  expectedDiscount: 15, expectedTotal: 425,    label: 'TESTE VIP 500'       },
+    { name: 'CARLOS', type: 'VIP',         value: 50,    active: true,  expectedDiscount:  5, expectedTotal: 47.5,   label: 'TESTE VIP 50'        },
+    { name: 'CARLOS', type: 'VIP',         value: 5000,  active: true,  expectedDiscount: 25, expectedTotal: 3750,   label: 'TESTE VIP 5000'      },
+    { name: 'CARLOS', type: 'VIP',         value: 10000, active: true,  expectedDiscount: 30, expectedTotal: 7000,   label: 'TESTE VIP 10000'     },
+    { name: 'ANA',    type: 'COMUM',       value: 1000,  active: true,  expectedDiscount: 10, expectedTotal: 900,    label: 'TESTE COMUM 1000'    },
+    { name: 'ANA',    type: 'COMUM',       value: 500,   active: true,  expectedDiscount:  7, expectedTotal: 465,    label: 'TESTE COMUM 500'     },
+    { name: 'ANA',    type: 'COMUM',       value: 50,    active: true,  expectedDiscount:  0, expectedTotal: 50,     label: 'TESTE COMUM 50'      },
+    { name: 'BOB',    type: 'FUNCIONARIO', value: 1000,  active: true,  expectedDiscount: 40, expectedTotal: 600,    label: 'TESTE FUNC 1000'     },
+    { name: 'BOB',    type: 'FUNCIONARIO', value: 50,    active: true,  expectedDiscount: 25, expectedTotal: 37.5,   label: 'TESTE FUNC 50'       },
+    { name: 'ZECA',   type: 'VIP',         value: 9999,  active: false, expectedDiscount:  0, expectedTotal: 9999,   label: 'TESTE INATIVO'       },
+    { name: 'X',      type: 'ESTRANHO',    value: 500,   active: true,  expectedDiscount:  0, expectedTotal: 500,    label: 'TESTE TIPO INVÁLIDO' },
+    { name: 'CARLOS', type: 'VIP',         value: 100,   active: true,  expectedDiscount: 10, expectedTotal: 90,     label: 'TESTE VIP 100'       },
+    { name: 'BOB',    type: 'FUNCIONARIO', value: 10000, active: true,  expectedDiscount: 50, expectedTotal: 5000,   label: 'TESTE FUNC 10000'    },
+    { name: 'ANA',    type: 'COMUM',       value: 10000, active: true,  expectedDiscount: 15, expectedTotal: 8500,   label: 'TESTE COMUM 10K'     },
+
+    // CASO BÁSICO: cliente VIP ativo com valor na faixa de R$1.000 → espera 20% de desconto
+    { name: 'JOAO',   type: 'VIP',         value: 1000,  active: true,  expectedDiscount: 20, expectedTotal: 800,    label: '[BASICO] VIP ativo R$1000 → 20% desc'       },
+
+    // EDGE CASE: valor exatamente no limite de uma faixa (R$100) → deve pegar a faixa correta (10% para VIP)
+    { name: 'JOAO',   type: 'VIP',         value: 100,   active: true,  expectedDiscount: 10, expectedTotal: 90,     label: '[EDGE] VIP no limite exato de R$100 → 10%'  },
+
+    // CASO DE FALHA: cliente inativo → não deve receber desconto, paga valor cheio
+    { name: 'JOAO',   type: 'VIP',         value: 1000,  active: false, expectedDiscount:  0, expectedTotal: 1000,   label: '[FALHA] VIP inativo → sem desconto'          },
+  ];
+
+  function runTest(testCase) {
+    const { type, value, active, expectedDiscount, expectedTotal, label } = testCase;
+
+    if (!active) {
+      const passed = expectedDiscount === 0 && expectedTotal === value;
+      return { label, discountPercent: 0, total: value, passed };
+    }
+
+    if (value <= 0) {
+      const passed = expectedDiscount === 0 && expectedTotal === 0;
+      return { label, discountPercent: 0, total: 0, passed };
+    }
+
+    const { discountPercent, total } = calculateOrder(type, value);
+    const passed = discountPercent === expectedDiscount && Math.abs(total - expectedTotal) < 0.001;
+    return { label, discountPercent, total, passed };
+  }
+
+  function handleRunTests() {
+    document.getElementById('test-log').textContent = '';
+    logTest('=======================================');
+    logTest('RODANDO TESTES...');
+    logTest('=======================================');
+
+    const results = TEST_CASES.map(runTest);
+
+    results.forEach(r => {
+      const status = r.passed ? '[OK]   ' : '[FAIL] ';
+      logTest(`${status} ${r.label} | DESC=${r.discountPercent.toFixed(2)}% TOTAL=${r.total.toFixed(2)}`);
+    });
+
+    const passed = results.filter(r => r.passed).length;
+    const failed = results.length - passed;
+
+    logTest('=======================================');
+    logTest(`OK: ${passed} | FAIL: ${failed}`);
+    logTest('=======================================');
+
+    renderResultTable(buildTestSummaryTable(results));
+  }
+
+  // ─── Init ────────────────────────────────────────────────────────────────────
+
+  (function init() {
+    log('=======================================');
+    log('SISTEMA DE PEDIDOS COM DESCONTO');
+    log('=======================================');
+    handleRunTests();
+  })();
+</script>
+
+</body>
+</html>
